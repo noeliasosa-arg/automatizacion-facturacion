@@ -1,0 +1,47 @@
+# docker-compose.yml — V2 AI-Powered
+# ------------------------------------
+# Igual que V1 pero el contenedor 'facturacion' recibe la API key
+# de Anthropic como variable de entorno.
+#
+# IMPORTANTE: Nunca pongas la API key directamente en este archivo.
+# Usá un archivo .env en la misma carpeta:
+#
+#   Crear archivo .env (no subirlo a GitHub — está en .gitignore):
+#   ANTHROPIC_API_KEY=tu-clave-aqui
+#
+# Para arrancar todo:   docker compose up -d
+# Para detener:         docker compose down
+# Para ver logs:        docker compose logs -f
+
+services:
+
+  # ── n8n ─────────────────────────────────────────────────────────
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    container_name: n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - GENERIC_TIMEZONE=America/Argentina/Buenos_Aires
+      - TZ=America/Argentina/Buenos_Aires
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+      - N8N_RUNNERS_ENABLED=true
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ".:/data/facturacion"
+
+  # ── servicio Python V2 ──────────────────────────────────────────
+  facturacion:
+    build: .
+    container_name: facturacion
+    restart: unless-stopped
+    environment:
+      # La API key viene del archivo .env (no hardcodeada aquí)
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    volumes:
+      - ".:/data/facturacion"
+
+volumes:
+  n8n_data:
+    external: true

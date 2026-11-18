@@ -1,0 +1,28 @@
+# ─── Datos reales de facturación (NO publicar) ───
+subdiarios/
+comprobantes/
+*.xlsx
+*.xls
+*.XLS
+*.XLSX
+*.pdf
+*.PDF
+
+# ─── Archivos generados ───
+planilla_anual.xlsx
+
+# ─── Python ───
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# ─── Sistema / editor ───
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ─── Credenciales ───
+.env
+*.token
